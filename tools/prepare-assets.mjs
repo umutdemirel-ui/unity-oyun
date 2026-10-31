@@ -199,10 +199,10 @@ async function prepTree() {
   const branches = subGeom(src, bc.filter((_, i) => i % 8 === 0).flat());
   const trunkFull = subGeom(src, Array.from({ length: gTrunk.count / 3 }, (_, i) => gTrunk.start / 3 + i));
   const trunk = simplify(trunkFull, 5000);
-  const leaves = leafCards(src, lc, 3, 1.15);
+  const leaves = leafCards(src, lc, 3, 1.7);
   // Uzak LOD: sadeleştirilmiş gövde + daha az, daha büyük yaprak kartı
   const trunkFar = simplify(trunkFull, 700);
-  const leavesFar = leafCards(src, lc, 14, 2.0);
+  const leavesFar = leafCards(src, lc, 7, 2.3);
   normalize([trunk, branches, leaves, trunkFar, leavesFar], 'y', { height: 5.5 }, 3);
   const o = `${OUT}/tree_small02`; fs.mkdirSync(o, { recursive: true });
   await exportGLB({ trunk, branches, leaves }, `${o}/tree_game.glb`);

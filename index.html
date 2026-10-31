@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <title>Fellhaven — Oynanabilir Prototip</title>
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <canvas id="game"></canvas>
+  <div id="fxlayer"></div>
+
+  <div id="hud" class="hidden">
+    <div id="status">
+      <div class="lvl"><span id="lvl">1</span></div>
+      <div class="bars">
+        <div class="bar hp"><i id="hpFill"></i><span id="hpText"></span></div>
+        <div class="bar st"><i id="stFill"></i></div>
+        <div class="bar xp"><i id="xpFill"></i><span id="xpText"></span></div>
+      </div>
+    </div>
+    <div id="topRight">
+      <div id="clock"></div>
+      <div id="gold">🪙 0</div>
+      <div id="tracker"></div>
+    </div>
+    <div id="hotbar">
+      <div class="slot" id="slotWeapon"><b>⚔</b><small>Silah</small></div>
+      <div class="slot" id="slotArmor"><b>🛡</b><small>Zırh</small></div>
+      <div class="slot" id="slotQuick"><b>—</b><small>Q kullan · R değiştir</small></div>
+    </div>
+    <div id="prompt" class="hidden"></div>
+    <div id="toasts"></div>
+    <div id="bossbar" class="hidden"><span id="bossName"></span><div class="bar boss"><i id="bossFill"></i></div></div>
+    <div id="region" class="hidden"></div>
+    <div id="enemyBars"></div>
+    <div id="hurt"></div>
+    <div id="hintLine">WASD hareket · Shift koş · Space zıpla · Sol tık hafif · Sağ tık/X ağır · F blok · V/Ctrl kaçın · E etkileşim · I envanter · J görev · H yardım</div>
+  </div>
+
+  <div id="touch" class="hidden"></div>
+
+  <section id="startScreen" class="overlay">
+    <div class="card start">
+      <h1>FELLHAVEN</h1>
+      <p class="sub">Ormanların, dağların ve eski sırların diyarı — oynanabilir dikey kesit</p>
+      <div class="btns">
+        <button id="btnContinue" class="primary">Devam Et</button>
+        <button id="btnNew">Yeni Oyun</button>
+      </div>
+      <div id="loadMsg" class="muted">Varlıklar yükleniyor…</div>
+      <div class="controls">
+        <b>Kontroller</b>
+        <ul>
+          <li><kbd>W A S D</kbd> yürü · <kbd>Shift</kbd> koş · <kbd>Space</kbd> zıpla</li>
+          <li>Fare: kamera (tıklayınca kilitlenir) · tekerlek: yakınlaştır · <kbd>←↑↓→</kbd> alternatif kamera</li>
+          <li><kbd>Sol tık</kbd> hafif saldırı · <kbd>Sağ tık</kbd> / <kbd>X</kbd> ağır saldırı</li>
+          <li><kbd>F</kbd> (basılı) blok · <kbd>V</kbd> / <kbd>Ctrl</kbd> kaçış yuvarlanması</li>
+          <li><kbd>E</kbd> etkileşim · <kbd>I</kbd> envanter · <kbd>J</kbd> görev günlüğü · <kbd>Q</kbd> eşya kullan · <kbd>R</kbd> eşya değiştir</li>
+          <li><kbd>Esc</kbd> duraklat/kaydet · <kbd>M</kbd> ses aç/kapat</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="pauseMenu" class="overlay hidden">
+    <div class="card"><h2>Duraklatıldı</h2>
+      <div class="btns col">
+        <button id="pResume" class="primary">Devam</button>
+        <button id="pSave">Kaydet</button>
+        <button id="pMute">Sesi kapat</button>
+        <button id="pNew" class="danger">Yeni Oyun (kaydı sil)</button>
+      </div>
+      <div class="muted" id="pInfo"></div>
+    </div>
+  </section>
+
+  <section id="deathScreen" class="overlay hidden">
+    <div class="card death"><h2>Yenildin</h2><p>Köyün şifacıları seni topladı.</p><button id="btnRespawn" class="primary">Köyde Yeniden Doğ</button></div>
+  </section>
+
+  <section id="invPanel" class="panel hidden">
+    <header><h2>Envanter</h2><span id="invGold"></span><button class="x" data-close>✕</button></header>
+    <div class="invbody">
+      <div class="grid" id="invGrid"></div>
+      <aside>
+        <div class="equip"><div class="eslot" id="eqWeapon"></div><div class="eslot" id="eqArmor"></div></div>
+        <div id="invStats" class="stats"></div>
+        <div id="invDetail" class="detail">Bir eşya seç.</div>
+      </aside>
+    </div>
+  </section>
+
+  <section id="journalPanel" class="panel hidden">
+    <header><h2>Görev Günlüğü</h2><button class="x" data-close>✕</button></header>
+    <div id="journalBody"></div>
+  </section>
+
+  <section id="dialoguePanel" class="dialogue hidden">
+    <div class="who" id="dlgWho"></div><p id="dlgText"></p><div id="dlgChoices"></div>
+  </section>
+
+  <section id="shopPanel" class="panel hidden">
+    <header><h2 id="shopName">Dükkân</h2><span id="shopGold"></span><button class="x" data-close>✕</button></header>
+    <div class="shopbody"><div><h3>Satın al</h3><div id="shopBuy"></div></div><div><h3>Sat (yarı fiyat)</h3><div id="shopSell"></div></div></div>
+  </section>
+
+  <section id="helpPanel" class="panel hidden"><header><h2>Yardım</h2><button class="x" data-close>✕</button></header><div id="helpBody"></div></section>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
