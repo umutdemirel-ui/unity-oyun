@@ -64,7 +64,7 @@ export async function buildWorld(scene, loader, quality = 'high') {
     map: T('ground037/color.jpg', { srgb: true, repeat: true }), normalMap: T('ground037/normal_gl.jpg', { repeat: true }),
     roughnessMap: T('ground037/rough.jpg', { repeat: true }), aoMap: T('ground037/ao.jpg', { repeat: true }),
   };
-  const SEG = quality === 'low' ? 160 : 260, SIZE = WORLD_HALF * 2, TILE = 5;
+  const SEG = quality === 'low' ? 160 : 260, SIZE = WORLD_HALF * 2, TILE = 2.1; // ambientCG Ground037 gerçek boyutu ≈ 2,1 m
   const tg = new THREE.PlaneGeometry(SIZE, SIZE, SEG, SEG); tg.rotateX(-Math.PI / 2);
   const P = tg.attributes.position, uv = tg.attributes.uv, colors = new Float32Array(P.count * 3), c = new THREE.Color();
   for (let i = 0; i < P.count; i++) {
@@ -113,7 +113,7 @@ export async function buildWorld(scene, loader, quality = 'high') {
     { geometry: geomOf(g, 'leaves'), material: leafMat, tint: autumn },
   ];
   if (treeG && treeFarG) {
-    world.scatterSets.push(new ScatterSet(scene, { placements: sc.trees, near: treeParts(treeG), far: treeParts(treeFarG), cell: 50, nearDist: 65, farDist: 230 }));
+    world.scatterSets.push(new ScatterSet(scene, { placements: sc.trees, near: treeParts(treeG), far: treeParts(treeFarG), cell: 50, nearDist: 55, farDist: 230 }));
   } else for (const t of sc.trees) placeholderTree(scene, t);
   const rockMat = new THREE.MeshStandardMaterial({ ...PBR('rock09'), roughness: 1 });
   if (rockG0 && rockG2) world.scatterSets.push(new ScatterSet(scene, { placements: sc.rocks, near: [{ geometry: geomOf(rockG0, 'lod0'), material: rockMat }], far: [{ geometry: geomOf(rockG2, 'lod2'), material: rockMat }], cell: 60, nearDist: 55, farDist: 230 }));
@@ -161,7 +161,7 @@ function buildVillage(scene, world) {
     for (const wx of [-H.w * 0.3, H.w * 0.3]) { const w = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.8, 0.1), winMat); w.position.set(wx, 1.9, H.d / 2 + 0.03); g.add(w); }
     const ch = new THREE.Mesh(new THREE.BoxGeometry(0.7, 1.6, 0.7), new THREE.MeshStandardMaterial({ color: 0x77706a, roughness: 1 })); ch.position.set(H.w * 0.28, H.h + rise + 0.2, -H.d * 0.15); g.add(ch);
     wall.castShadow = wall.receiveShadow = true; scene.add(g);
-    world.boxes.push({ x: H.x, z: H.z, hw: H.w / 2 + 0.1, hd: H.d / 2 + 0.1, rot: H.rot });
+    world.boxes.push({ x: H.x, z: H.z, hw: H.w / 2 + 0.1, hd: H.d / 2 + 0.1, rot: H.rot, y0: H.y });
   }
   // Kuyu
   const W = VILLAGE_PROPS.well, wy = heightAt(W.x, W.z); const wg = new THREE.Group(); wg.position.set(W.x, wy, W.z);

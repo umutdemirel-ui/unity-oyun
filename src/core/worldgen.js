@@ -55,6 +55,8 @@ export function heightAt(x, z) {
     const t = 1 - smoothstep(f.r, f.r + f.soft, Math.hypot(x - f.x, z - f.z));
     if (t > 0) h = mix(h, f === FLATS[0] ? 0.4 : baseHeightFlat(f), t);
   }
+  // yol koridoru: su altında kalmasın (görev alanlarına her zaman ulaşılabilsin)
+  const pk = 1 - smoothstep(2.5, 9, pathDist(x, z)); if (pk > 0) h = Math.max(h, mix(h, 0.5, pk));
   const L = LOCATIONS.lake; // göl
   const dl = Math.hypot(x - L.x, z - L.z);
   h = mix(h, -3.4, 1 - smoothstep(L.r * 0.55, L.r * 1.15, dl));

@@ -73,7 +73,7 @@ aside { flex:1; min-width:230px; } .equip { display:flex; gap:8px; } .eslot { fl
 #touch .tb { position:absolute; width:62px; height:62px; border-radius:50%; background:rgba(30,24,16,.7); border:2px solid rgba(230,195,106,.7); color:#fff; font-size:22px; display:grid; place-items:center; pointer-events:auto; touch-action:none; padding:0; }
 #touch .tb:active, #touch .tb.on { background:rgba(122,90,30,.9); }
 #touch .look { position:absolute; right:0; top:0; width:55%; height:62%; pointer-events:auto; touch-action:none; }
-.touch-ui #hintLine { display:none; } .touch-ui #hotbar { bottom:auto; top:14px; left:50%; transform:translateX(-50%) scale(.75); transform-origin:top; } .touch-ui #prompt { bottom:190px; }
+.touch-ui #hintLine { display:none; } .touch-ui #hotbar { bottom:6px; transform:translateX(-50%) scale(.72); transform-origin:bottom; } .touch-ui #prompt { bottom:80px; }
 .touch-ui #topRight { top:8px; } .touch-ui #tracker { font-size:11px; padding:5px 8px; max-width:34vw; }
 @media (max-height:520px) { .panel { max-height:98vh; padding:8px 12px; } .grid { grid-template-columns:repeat(8, 52px); } .cell { width:52px; height:52px; font-size:24px; } .dialogue { bottom:6px; padding:8px 14px; } .dialogue p { font-size:14px; min-height:0; } }
 @media (max-width:760px) { .grid { grid-template-columns:repeat(5, 56px); } .cell { width:56px; height:56px; } .shopbody { grid-template-columns:1fr; } }

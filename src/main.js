@@ -48,7 +48,7 @@ class Game {
   async init() {
     const loader = createLoader(this.renderer);
     this.world = await buildWorld(this.scene, loader, this.quality);
-    this.player = new Player(this); this.player.refreshLook();
+    this.cam.world = this.world; this.player = new Player(this); this.player.refreshLook();
     // Oyuncuya gece mesalesi (yakın aydınlatma)
     this.torch = new THREE.PointLight(0xffc880, 0, 14, 2); this.torch.position.set(0, 2.4, 0.4); this.player.root.add(this.torch);
     this.buildNPCs(); this.pickupFlags();
@@ -82,7 +82,7 @@ class Game {
   newGame(silent = false) {
     this.progression = new Progression(); this.inventory = new Inventory(24); this.quests = new QuestLog(); this.defeated = new Set(); this.collected = new Set();
     this.inventory.add('rusty_sword'); this.inventory.equip('rusty_sword'); this.inventory.add('health_potion', 2); this.inventory.add('bread', 2); this.inventory.addGold(15);
-    this.player.respawn(); this.player.place(LOCATIONS.spawn.x, LOCATIONS.spawn.z); this.player.yaw = Math.PI; this.player.hp = this.player.maxHp;
+    this.player.respawn(); this.player.invuln = 0; this.player.place(LOCATIONS.spawn.x, LOCATIONS.spawn.z); this.player.yaw = Math.PI; this.player.hp = this.player.maxHp;
     this.cam.yaw = 0; this.cam.init = false; this.env.time = 0.33;
     this.world.pickups.forEach(p => { p.taken = false; p.mesh.visible = true; }); for (const c of CHESTS) this.resetChestVisual(c.id);
     this.spawnEnemies(); this.player.refreshLook(); this.quickIdx = 0;
@@ -92,7 +92,7 @@ class Game {
     this.progression.load(d.progression); this.inventory.load(d.inventory); this.quests.load(d.quests);
     this.defeated = new Set(Array.isArray(d.world?.defeated) ? d.world.defeated : []); this.collected = new Set(Array.isArray(d.world?.collected) ? d.world.collected : []);
     if (!this.inventory.equipment.weapon && !this.inventory.has('rusty_sword') && this.inventory.slots.length === 0 && this.progression.level === 1) { /* boş kayıt: olduğu gibi */ }
-    this.player.respawn(); const p = d.player; const r = Math.hypot(p.x, p.z);
+    this.player.respawn(); this.player.invuln = 0; const p = d.player; const r = Math.hypot(p.x, p.z);
     let x = p.x, z = p.z; if (!(r < PLAY_RADIUS) || waterDepth(x, z) > 1.3) { x = LOCATIONS.spawn.x; z = LOCATIONS.spawn.z; this.ui.toast('Kayıtlı konum geçersizdi, köye taşındın', 'warn'); }
     this.player.place(x, z); this.player.yaw = Number.isFinite(p.yaw) ? p.yaw : 0; this.cam.yaw = this.player.yaw + Math.PI; this.cam.init = false;
     this.player.hp = Math.min(this.player.maxHp, Math.max(1, p.hp)); this.player.stamina = Number.isFinite(p.stamina) ? Math.min(p.stamina, this.player.maxStamina) : this.player.maxStamina;
@@ -118,7 +118,7 @@ class Game {
   }
   uiKey(e) {
     const ui = this.ui; if (this.state !== 'playing') return false; if (this.player.dead) return true;
-    if (e.code === 'Escape') { if (performance.now() - ui.lastPause < 300) return true; if (ui.paused) this.resume(); else if (ui.modalOpen) ui.closePanels(); else this.openPause(); return true; }
+    if (e.code === 'Escape') { if (ui.paused) this.resume(); else if (ui.modalOpen) ui.closePanels(); else this.openPause(); return true; }
     if (ui.paused) return true;
     if (ui.dialogue) { if (/^Digit[1-9]$/.test(e.code)) ui.dialogueKey(+e.code.slice(5)); else if (['KeyE', 'Enter', 'Space'].includes(e.code) && ui.dialogue.node.choices.length === 1) ui.dialogueKey(1); return true; }
     if (e.code === 'KeyI' || e.code === 'Tab') { ui.toggle('inv'); return true; }

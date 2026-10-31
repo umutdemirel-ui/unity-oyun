@@ -81,12 +81,12 @@ export class Environment {
     // Işık
     const dim = 1 - this.cloud * 0.55 - this.rain * 0.15;
     const moonDir = sunDir.clone().multiplyScalar(-1); moonDir.y = Math.abs(moonDir.y) * 0.8 + 0.25;
-    const sunI = Math.max(0, e) * 3.0 * dim, moonI = night * 0.32 * (1 - this.cloud * 0.6);
+    const sunI = Math.max(0, e + 0.04) * 3.0 * dim, moonI = night * 0.4 * (1 - this.cloud * 0.6);
     const useSun = sunI >= moonI;
     const L = useSun ? sunDir : moonDir.normalize();
     this.sun.position.copy(focus).addScaledVector(L, 90); this.sun.target.position.copy(focus); this.sun.target.updateMatrixWorld();
     this.sun.intensity = Math.max(sunI, moonI); this.sun.color.setRGB(1, 0.78 + 0.22 * Math.min(1, e * 3), 0.6 + 0.4 * Math.min(1, e * 4)); if (!useSun) this.sun.color.setRGB(0.6, 0.7, 1);
-    this.hemi.intensity = (0.12 + 0.75 * day) * (1 - this.cloud * 0.25) + night * 0.14; this.hemi.color.copy(top).lerp(new THREE.Color(1, 1, 1), 0.4); this.hemi.groundColor.setRGB(0.28, 0.24, 0.16).multiplyScalar(0.4 + day * 0.6);
+    this.hemi.intensity = (0.16 + 0.75 * day) * (1 - this.cloud * 0.25) + night * 0.2 + dusk * 0.35; this.hemi.color.copy(top).lerp(new THREE.Color(1, 1, 1), 0.4); this.hemi.groundColor.setRGB(0.28, 0.24, 0.16).multiplyScalar(0.4 + day * 0.6);
     // Sis
     this.scene.fog.color.copy(hor); this.scene.fog.density = 0.0036 + this.cloud * 0.003 + this.rain * 0.007 + night * 0.0012;
     // Yağmur parçacıkları
